@@ -1,0 +1,65 @@
+body {
+    width: 175px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 12px;
+}
+
+.title-container, .auto-btns{
+    font-family: Segoe UI, sans-serif;
+}
+
+.title {
+    color: #505050;
+    font-size: 24px;
+    font-weight: 400;
+    margin: 0 auto;
+}
+
+.version {
+    font-size: 16px;
+    color: #A0A0A0;
+    font-weight: 400;
+    margin: 0 auto;
+}
+
+.logo-container {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0px 20px 0px;
+}
+
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+}
+
+#auto-start-btn {
+    background-color: #015cfe;
+    color: #ffffff;
+}
+
+#auto-stop-btn {
+    background-color: transparent;
+    color: #015cfe;
+}
+
+.auto-btns {
+    padding: 10px 20px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    text-align: center;
+}
+
+#auto-start-btn:hover {
+    background-color: #0022ae;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+#auto-stop-btn:hover {
+    background-color: #d8e0ef;
+    color: #505050;
+}

@@ -68,3 +68,9 @@ The script is triggered by two buttons in the extension popup:
 ## Limitations & Notes
 
 - The script relies on exact DOM selectors. UI changes may break functionality.
+
+---
+
+## Live Preview
+
+- Live Preview: https://mjcw88.github.io/auto-initialiser/

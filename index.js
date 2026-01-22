@@ -11,6 +11,11 @@ async function start() {
             target: { tabId: tab.id },
 
             func: async () => {
+                const mainBody = document.querySelector("body > woms-root > div > div > main > woms-technical-eval");
+                const claimedTab = document.querySelector("[attr-e2e='claimed']");
+                const refineBtn = document.querySelector("[attr-e2e$='_refine']");
+                const username = document.querySelector("[attr-e2e='user_menu_user'] strong").textContent.trim();
+
                 const REFRESH = 100;
                 const TIMEOUT = 10000;
 
@@ -53,11 +58,6 @@ async function start() {
                     });
                 };
 
-                async function getUsername() {
-                    const usernameElement = await waitForElement(document, "[attr-e2e='user_menu_user'] strong");
-                    return usernameElement.textContent.trim();
-                };
-
                 async function isJobs(mainBody) {
                     const jobsTable = await waitForElement(mainBody, "section > woms-table > div > div.woms-table-grid.dsc-table-grid > ag-grid-angular > div > div.ag-root-wrapper-body.ag-layout-auto-height.ag-focus-managed > div.ag-root.ag-unselectable.ag-layout-auto-height");
                     if (jobsTable) {
@@ -66,8 +66,8 @@ async function start() {
                     return false;
                 };
 
-                async function initialiseJobs(claimedTab, userName, mainBody) {
-                    let materialId, series, rally, taskStatus, assignee;
+                async function initialiseJobs(mainBody, claimedTab, username) {
+                    let taskStatus, assignee;
                     
                     if (!claimedTab.classList.contains("--selected")) {
                         console.error("Auto Initialiser Error: Claimed tab deselected");
@@ -89,7 +89,7 @@ async function start() {
                         return false;
                     }
 
-                    const columns = ["case", "contentInfo", "rallyMovieName", "taskStatus", "assignee"];
+                    const columns = ["taskStatus", "assignee"];
                     await Promise.all(
                         columns.map(colId => waitForElement(row, `[col-id="${colId}"]:not(:empty)`))
                     );
@@ -99,15 +99,6 @@ async function start() {
                         const text = column.textContent.trim();
 
                         switch (colId) {
-                            case "case":
-                                materialId = text;
-                                break;
-                            case "contentInfo":
-                                series = text;
-                                break;
-                            case "rallyMovieName":
-                                rally = text;
-                                break;
                             case "taskStatus":
                                 taskStatus = text;
                                 break;
@@ -122,8 +113,8 @@ async function start() {
                         return false;
                     }
 
-                    if (assignee !== userName) {
-                        console.error(`Auto Initialiser Error: user mismatch\nAccepted user: ${userName}\nAssigned: ${assignee}`);
+                    if (assignee !== username) {
+                        console.error(`Auto Initialiser Error: user mismatch\nAccepted user: ${username}\nAssigned: ${assignee}`);
                         return false;
                     }
 
@@ -146,18 +137,12 @@ async function start() {
 
                 // Main script
                 try {
-                    const mainBody = document.querySelector("body > woms-root > div > div > main > woms-technical-eval");
-                    const claimedTab = document.querySelector("[attr-e2e='claimed']");
-                    const refineBtn = document.querySelector("[attr-e2e='refine_bar_refine']");
-
-                    const username = await getUsername();
-
                     claimedTab.click();
                     await iterateTaskStatusMenu();
                     refineBtn.click();
 
                     while (await isJobs(mainBody)) {
-                        const shouldContinue = await initialiseJobs(claimedTab, username, mainBody);
+                        const shouldContinue = await initialiseJobs(mainBody, claimedTab, username);
 
                         if (!shouldContinue) {
                             break;
@@ -187,4 +172,3 @@ function stop() {
         });
     });
 };
-
